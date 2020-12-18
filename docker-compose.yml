@@ -1,0 +1,66 @@
+version: '3.3'
+networks:
+  mynetwork:
+    external:
+      name: mynetwork
+services:
+  model:
+    build: ./model
+    image: model
+    container_name: model
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - mynetwork
+   
+   #volumes:
+    
+  repository:
+    build: ./repository
+    image: repository
+    container_name: repository
+    ports:
+      - "8761:8761"
+    restart: always
+    depends_on:
+      - model
+    networks:
+      - mynetwork
+   
+  service-api:
+    build: ./service-api
+    image: service-api
+    container_name: service-api
+    ports:
+      - "9000:9000"
+    restart: always
+    depends_on:
+      - model
+    networks:
+      - mynetwork
+   
+  service-impl:
+    build: ./service-impl
+    container_name: service-impl
+    ports:
+      - "8070:8070"
+    restart: always
+    depends_on:
+      - repository
+      - service-api
+    networks:
+      - mynetwork
+   application:
+    build: ./application
+    container_name: application
+    ports:
+      - "8073:8073"
+    restart: always
+    depends_on:
+      - model
+      - repository
+      - service-api
+    networks:
+      - mynetwork
+   
