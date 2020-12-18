@@ -1,6 +1,7 @@
-  mynetwork:
-    external:
-      name: mynetwork
+version: '3.3'
+mynetwork:
+  external:
+    name: mynetwork
 services:
   model:
     build: ./model
